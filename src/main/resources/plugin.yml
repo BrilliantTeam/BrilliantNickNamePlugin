@@ -9,7 +9,6 @@ folia-supported: true
 commands:
   nickname:
     description: Main nickname command
-    aliases: [nick]
     permission: server.nickname
     usage: /<command> [set/remove/help] [nickname] [player]
 

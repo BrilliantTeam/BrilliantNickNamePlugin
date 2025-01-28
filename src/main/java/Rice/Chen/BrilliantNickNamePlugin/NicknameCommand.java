@@ -62,7 +62,7 @@ public class NicknameCommand implements CommandExecutor {
         }
 
         final Player target;
-        final String nickname = args[1];
+        final String inputNickname = args[1].trim();
 
         if (args.length > 2 && sender.hasPermission("server.nickname.others")) {
             Player foundTarget = Bukkit.getPlayer(args[2]);
@@ -75,27 +75,33 @@ public class NicknameCommand implements CommandExecutor {
             target = sender;
         }
 
-        String strippedNickname = nickname.replaceAll("&[0-9a-fk-or]", "");
-        if (strippedNickname.length() > MAX_NICKNAME_LENGTH) {
-            sender.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7暱稱最多只能 &c20 &7個字符！（不包含顏色代碼）"));
+        int realLength = ColorUtils.getStrippedLength(inputNickname);
+        if (realLength > MAX_NICKNAME_LENGTH) {
+            sender.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7暱稱最多只能 &c" + 
+                MAX_NICKNAME_LENGTH + " &7個字符！（不包含顏色代碼）"));
             return;
         }
 
-        final String displayName = "*" + nickname;
+        final String displayName = "*" + inputNickname;
         plugin.setNickname(target.getUniqueId(), displayName);
+        
+        Component coloredDisplayName = ColorUtils.translateColors(displayName);
         
         if (BrilliantNickNamePlugin.isFolia()) {
             target.getScheduler().run(plugin, (task) -> 
-                target.displayName(plugin.formatMessage(displayName)), null);
+                target.displayName(coloredDisplayName), null);
         } else {
-            target.setDisplayName(displayName);
+            target.setDisplayName(coloredDisplayName.toString());
         }
 
         if (target == sender) {
-            sender.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7您的暱稱已更新為：&r" + displayName));
+            sender.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7您的暱稱已更新為：") 
+                .append(coloredDisplayName));
         } else {
-            sender.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7已將 &a" + target.getName() + " &7的暱稱更新為：&r" + displayName));
-            target.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7您的暱稱已被更新為：&r" + displayName));
+            sender.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7已將 &a" + 
+                target.getName() + " &7的暱稱更新為：").append(coloredDisplayName));
+            target.sendMessage(plugin.formatMessage("&7｜&6系統&7｜&f飯娘：&7您的暱稱已被更新為：")
+                .append(coloredDisplayName));
         }
     }
 
