@@ -1,0 +1,22 @@
+name: BrilliantNickNamePlugin
+version: '1.0'
+main: Rice.Chen.BrilliantNickNamePlugin.BrilliantNickNamePlugin
+api-version: '1.20'
+description: A nickname plugin supporting both Paper and Folia
+softdepend: [PlaceholderAPI]
+folia-supported: true
+
+commands:
+  nickname:
+    description: Main nickname command
+    aliases: [nick]
+    permission: server.nickname
+    usage: /<command> [set/remove/help] [nickname] [player]
+
+permissions:
+  server.nickname:
+    description: Allows use of nickname commands
+    default: op
+  server.nickname.others:
+    description: Allows changing other players' nicknames
+    default: op
