@@ -82,7 +82,7 @@ public class NicknameCommand implements CommandExecutor {
             return;
         }
 
-        final String displayName = "*" + inputNickname;
+        final String displayName = inputNickname + "&r*";
         plugin.setNickname(target.getUniqueId(), displayName);
         
         Component coloredDisplayName = ColorUtils.translateColors(displayName);
