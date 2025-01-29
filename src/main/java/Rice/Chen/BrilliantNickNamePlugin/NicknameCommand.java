@@ -16,6 +16,10 @@ public class NicknameCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
+    public static String preprocessColorCodes(String text) {
+        return text.replace("&#", "#");
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
@@ -62,7 +66,8 @@ public class NicknameCommand implements CommandExecutor {
         }
 
         final Player target;
-        final String inputNickname = args[1].trim();
+        final String rawNickname = args[1].trim();
+        final String inputNickname = rawNickname.replace("&#", "#");
 
         if (args.length > 2 && sender.hasPermission("server.nickname.others")) {
             Player foundTarget = Bukkit.getPlayer(args[2]);

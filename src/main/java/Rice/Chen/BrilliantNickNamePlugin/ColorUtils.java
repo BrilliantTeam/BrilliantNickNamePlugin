@@ -8,20 +8,26 @@ import java.util.regex.Pattern;
 
 public class ColorUtils {
     private static final Pattern LEGACY_COLOR_PATTERN = Pattern.compile("&[0-9a-fk-or]");
-    
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("(?:&)?#([0-9a-fA-F]{6})");
+
+    public static String preprocessColorCodes(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replace("&#", "#");
+    }
 
     public static int getStrippedLength(String text) {
         String stripped = text;
         
         stripped = stripped.replaceAll("&[0-9a-fk-or]", "");
-        
         stripped = stripped.replaceAll("(?:&)?#[0-9a-fA-F]{6}", "");
         
         return stripped.length();
     }
 
     public static Component translateColors(String text) {
+        text = preprocessColorCodes(text);
         Matcher hexMatcher = HEX_COLOR_PATTERN.matcher(text);
         StringBuffer hexResult = new StringBuffer();
         
@@ -39,11 +45,13 @@ public class ColorUtils {
     }
 
     public static boolean containsValidColorCodes(String text) {
+        text = preprocessColorCodes(text);
         return LEGACY_COLOR_PATTERN.matcher(text).find() || 
                HEX_COLOR_PATTERN.matcher(text).find();
     }
 
     public static String getLastColors(String text) {
+        text = preprocessColorCodes(text);
         StringBuilder result = new StringBuilder();
         String lastHex = null;
         String lastLegacy = null;
