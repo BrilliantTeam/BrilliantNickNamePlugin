@@ -1,7 +1,7 @@
 package Rice.Chen.BrilliantNickNamePlugin;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,25 +36,25 @@ public class NicknamePlaceholder extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String params) {
-        if (player == null) return "";
+    public String onRequest(OfflinePlayer offlinePlayer, @NotNull String params) {
+        if (offlinePlayer == null) return "";
         
         if (params.equals("get")) {
-            String nickname = plugin.getNickname(player.getUniqueId());
-            return nickname != null ? nickname : player.getName();
+            String nickname = plugin.getNickname(offlinePlayer.getUniqueId());
+            return nickname != null ? nickname : offlinePlayer.getName();
         }
         
         if (params.equals("plain")) {
-            String nickname = plugin.getNickname(player.getUniqueId());
-            if (nickname == null) return player.getName();
+            String nickname = plugin.getNickname(offlinePlayer.getUniqueId());
+            if (nickname == null) return offlinePlayer.getName();
             
             String plainNickname = stripColorCodes(nickname);
             return plainNickname;
         }
         
         if (params.equals("vanilla")) {
-            String nickname = plugin.getNickname(player.getUniqueId());
-            if (nickname == null) return player.getName();
+            String nickname = plugin.getNickname(offlinePlayer.getUniqueId());
+            if (nickname == null) return offlinePlayer.getName();
             
             String vanillaNickname = convertToVanillaColorCodes(nickname);
             return vanillaNickname;
@@ -67,7 +67,6 @@ public class NicknamePlaceholder extends PlaceholderExpansion {
         if (text == null) return "";
         
         String result = text.replaceAll("&[0-9a-fk-or]", "");
-        
         result = result.replaceAll("(?:&)?#[0-9a-fA-F]{6}", "");
         
         return result;
